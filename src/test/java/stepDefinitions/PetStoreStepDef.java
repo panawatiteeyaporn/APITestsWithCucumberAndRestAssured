@@ -11,6 +11,8 @@ import models.PetCategory;
 import models.PetTag;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -25,17 +27,26 @@ public class PetStoreStepDef {
         RestAssured.baseURI = "https://petstore.swagger.io/v2/pet";
     }
 
-    @Given("User created a Pet with id {int}")
-    public void user_created_a_pet_with_id(int id) {
+    @Given("User created a Pet with the following data")
+    public void user_created_a_pet_with_the_following_data(io.cucumber.datatable.DataTable dataTable) {
 
-        PetCategory category = new PetCategory(1, "dog");
-        PetTag tags = new PetTag(0, "myTag");
+        List<Map<String, String>> data = dataTable.asMaps(String.class, String.class);
+
+        PetCategory category = new PetCategory(
+                Integer.parseInt(data.get(0).get("category.id")),
+                data.get(0).get("category.name"));
+
+        PetTag tags = new PetTag(
+                Integer.parseInt(data.get(0).get("tag.id")),
+                data.get(0).get("tag.name"));
+
+        String[] urls = data.get(0).get("urls").split(",");
 
         //Create pet from serialize pet model
-        pet = new Pet(id,
-                "Yuna",
-                "available",
-                Arrays.asList("url1", "url2"),
+        pet = new Pet(Integer.parseInt(data.get(0).get("id")),
+                data.get(0).get("name"),
+                data.get(0).get("status"),
+                Arrays.asList(urls),
                 Arrays.asList(tags),
                 category);
     }
@@ -68,3 +79,4 @@ public class PetStoreStepDef {
     }
 
 }
+
