@@ -5,6 +5,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.RestAssured;
+import io.restassured.http.Header;
 import models.Pet;
 import models.PetCategory;
 import models.PetTag;
@@ -41,7 +42,8 @@ public class PetStoreStepDef {
 
     @When("User added a Pet to the store")
     public void user_added_a_pet_to_the_store() {
-        given().body(pet).when().post().then()
+        var head = new Header("Content-Type", "application/json");
+        given().header(head).body(pet).when().post().then()
                 .assertThat().statusCode(200);
     }
 
