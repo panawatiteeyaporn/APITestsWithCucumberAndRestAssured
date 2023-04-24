@@ -1,6 +1,6 @@
 Feature: Pet API interaction
 
-  Scenario: User can add another pet to the store
+  Scenario: User can add Pet to the store
     Given User created a Pet with the following data
       | id  | name | status    | urls      | category.id | category.name | tag.id | tag.name |
       | 212 | Yuna | available | url1,url2 | 1           | dog           | 0      | myTag    |
