@@ -78,5 +78,33 @@ public class PetStoreStepDef {
 
     }
 
+    @Then("User updated Pet data as follows")
+    public void user_updated_pet_data_as_follows(io.cucumber.datatable.DataTable dataTable) {
+        List<Map<String, String>> data = dataTable.asMaps(String.class, String.class);
+
+        pet.setName(data.get(0).get("name"));
+        pet.setStatus(data.get(0).get("status"));
+
+        String[] urls = data.get(0).get("urls").split(",");
+        pet.setPhotoUrls(Arrays.asList(urls));
+
+        PetCategory category = new PetCategory(
+                Integer.parseInt(data.get(0).get("category.id")),
+                data.get(0).get("category.name"));
+        pet.setCategory(category);
+
+        PetTag tags = new PetTag(
+                Integer.parseInt(data.get(0).get("tag.id")),
+                data.get(0).get("tag.name"));
+        pet.setTags(Arrays.asList(tags));
+    }
+
+    @Then("User updated Pet data on the store")
+    public void user_updated_pet_data_on_the_store() {
+        var head = new Header("Content-Type", "application/json");
+        given().header(head).body(pet).put().then()
+                .assertThat().statusCode(200);
+    }
+
 }
 
